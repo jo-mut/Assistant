@@ -36,7 +36,7 @@
                :background-color  :#0077b5}
       [rn/text {:style
                 {:color        :white
-                 :font-size    15
-                 :font-weight  :semibold
-                 :padding      10}}
+                 :font-size    18
+                 :font-weight  :bold
+                 :padding      20}}
        "Get Started"]]]]])
