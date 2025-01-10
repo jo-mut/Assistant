@@ -4,6 +4,7 @@
    [reagent.core :as reagent]
    ["react-native" :as react-native]
    [react-native.flatlist :as  flat-list]
+   ["@react-native-community/voice" :as rn-voice]
    ["react-native-vector-icons/MaterialCommunityIcons" :default MaterialCommunityIcons]))
 
 (def view (reagent/adapt-react-class (.-View ^js react-native)))
@@ -22,6 +23,8 @@
    (if (string? source)
      (assoc props :source {:uri source})
      props)])
+
+(def voice (.-default rn-voice))
 
 (def scroll-view (reagent/adapt-react-class (.-ScrollView ^js react-native)))
 

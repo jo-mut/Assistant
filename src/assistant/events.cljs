@@ -24,7 +24,7 @@
 (rf/reg-fx
  :get-screen-params
  (fn [[route]]
-   (js->clj (.-params route))))
+   (js->clj (.-params ^js route))))
 
 (rf/reg-event-fx
  :get-current-route
