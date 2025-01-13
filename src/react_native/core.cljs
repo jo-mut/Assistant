@@ -4,7 +4,7 @@
    [reagent.core :as reagent]
    ["react-native" :as react-native]
    [react-native.flatlist :as  flat-list]
-   ["@react-native-community/voice" :as rn-voice]
+   ["@react-native-community/voice" :default rn-voice]
    ["react-native-vector-icons/MaterialCommunityIcons" :default MaterialCommunityIcons]))
 
 (def view (reagent/adapt-react-class (.-View ^js react-native)))
@@ -24,7 +24,7 @@
      (assoc props :source {:uri source})
      props)])
 
-(def voice (.-default rn-voice))
+(def voice rn-voice)
 
 (def scroll-view (reagent/adapt-react-class (.-ScrollView ^js react-native)))
 
@@ -67,4 +67,35 @@
    (fn []
      (js->clj (.get (.-Dimensions ^js react-native) "screen") :keywordize-keys true))))
 
+(def use-ref react/useRef)
 
+(defn use-ref-atom
+  [value]
+  (let [ref (use-ref (atom value))]
+    (.-current ^js ref)))
+
+(defn get-js-deps
+  [deps]
+  (if deps
+    (if (empty? deps)
+      #js [true]
+      (let [prev-state (use-ref-atom {:value false :deps nil})
+            prev-deps  (:deps @prev-state)
+            prev-value (:value @prev-state)]
+        (if (and (not (nil? prev-deps)) (not= (count deps) (count prev-deps)))
+          (throw (js/Error. "Hooks can't have a different number of dependencies across re-renders"))
+          (if (not= deps prev-deps)
+            (let [new-value (not prev-value)]
+              (reset! prev-state {:value new-value
+                                  :deps  deps})
+              #js [new-value])
+            #js [prev-value]))))
+    js/undefined))
+
+(defn use-effect
+  ([handler]
+   (use-effect handler nil))
+  ([handler deps]
+   (react/useEffect
+    #(let [ret (handler)] (if (fn? ret) ret js/undefined))
+    (get-js-deps deps))))
