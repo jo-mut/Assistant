@@ -1,15 +1,17 @@
 (ns assistant.screens.home.view
   (:require
    ["react" :as react]
+   [goog.object :as gobj]
    [reagent.core :as r]
    [react-native.core :as rn]
    [assistant.constants.images :as images]
-   [assistant.constants.messages :as messages]))
+   [assistant.constants.messages :as messages]
+   ["./voice-wrapper" :as VoiceWrapper]))
 
-(def recording (r/atom false))
+(def recording (r/atom true))
 (def loaded (r/atom false))
 (def onStarted (r/atom false))
-(def onStopped (r/atom false))
+
 
 (defn clear-chat
   []
@@ -37,29 +39,30 @@
                      :border-radius    10}}]])
 
 
-
 (defn voice-start []
-  (reset! recording true)
-  (-> (.start ^js rn/voice "en-US")
+  (-> ^js rn/voice
+      (.start "en-US")
       (.then (fn [result]
-               (reset! onStarted (not @onStarted))))
-      (.catch (fn [error]
-                (js/console.error "Error starting voice recognition:" error)))))
-
-(defn voice-stop []
-  (reset! recording false)
-  (-> (.stop ^js rn/voice)
-      (.then (fn [result]
-               (reset! onStopped (not @onStopped))))
+               (js/console.log "results started ***** " result)))
       (.catch (fn [error]
                 (js/console.error "Error stopping voice recognition:" error)))))
+
+(defn voice-stop []
+  (->
+   (.stop ^js rn/voice)
+   (.then (fn [result]
+            (js/console.log "results stopped ***** " result)))
+   (.catch (fn [error]
+             (js/console.error "Error stopping voice recognition:" error)))))
 
 (defn record-button []
   [rn/touchable-opacity
    {:on-press (fn []
+                (reset! recording (not @recording))
+                (js/console.log "recording " @recording)
                 (if @recording
-                  (voice-stop)
-                  (voice-start)))}
+                  (voice-start)
+                  (voice-stop)))}
    [rn/image
     {:source      (images/get-image :active-mic)
      :resize-mode :contain
@@ -105,29 +108,36 @@
       :key-fn         (fn [] (str (rand-int 1000000)))]
      [rn/view])])
 
+
 (defn- f-view []
   (let [messages messages/messages]
     (rn/use-effect
      (fn []
-       (fn []
-         (.onSpeechResults rn/voice
-                           (fn [results]
-                             (js/console.log "speech results: " results)))
-         (.onSpeechError rn/voice
-                         (fn [error]
-                           (println "speech error: " error)))
-         (.onSpeechPartialResults rn/voice
-                                  (fn [results]
-                                    (println "speech partial results: " results)))
-         (.onSpeechEnd rn/voice
-                       (fn []
-                         (println "speech end")))) 
+       (set! (.-onSpeechVolumeChanged rn/voice)
+             (fn [event]
+               (js/console.log "Speech volume changed" event)))
+
+       (set! (.-onSpeechStart rn/voice)
+             (fn [event]
+               (js/console.log "Speech started" event)))
+
+       (set! (.-onSpeechEnd rn/voice)
+             (fn [event]
+               (js/console.log "Speech ended" event)))
+
+       (set! (.-onSpeechError rn/voice)
+             (fn [event]
+               (js/console.log "Speech error" event)))
+
+       (set! (.-onSpeechRecognized rn/voice)
+             (fn [event]
+               (js/console.log "Speech recognized" event)))
        (fn []
          (->
-          (.destroy rn/voice)
+          (.destroy ^js rn/voice)
           (.then (fn []
-                   (.removeAllListeners rn/voice)))))))
-    [@onStarted @onStopped]
+                   (.removeAllListeners rn/voice))))))
+     [@onStarted])
 
     [rn/view {:flex  1
               :style {:background-color "black"}}

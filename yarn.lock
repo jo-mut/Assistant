@@ -2975,6 +2975,7 @@ __metadata:
     react-native-safe-area-context: "npm:^5.0.0"
     react-native-screens: "npm:^4.4.0"
     react-native-svg: "npm:^15.10.1"
+    react-native-tts: "npm:^4.1.1"
     react-native-vector-icons: "npm:^10.2.0"
     react-test-renderer: "npm:18.3.1"
     shadow-cljs: "npm:^2.28.20"
@@ -9151,6 +9152,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/f6b9491f321e80b56b50a0d0a4872fbc7adbe04892a7fca953eb1d1e984597f02a95a08560443bab7c074e6767631245d6f737c571d6a6977987311d44d3a717
+  languageName: node
+  linkType: hard
+
+"react-native-tts@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "react-native-tts@npm:4.1.1"
+  checksum: 10c0/c0bc867e350db40668474ddc5090b1a84a08073d84b809005a9fd200ccafc088f91d1dff0f90b8344cb8e72c4afac40c7ab40f541f56e665e0c971e8b75d39a3
   languageName: node
   linkType: hard
 

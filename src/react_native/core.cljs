@@ -26,6 +26,9 @@
 
 (def voice rn-voice)
 
+;; (def voice (reagent/adapt-react-class rn-voice))
+
+
 (def scroll-view (reagent/adapt-react-class (.-ScrollView ^js react-native)))
 
 (def safe-area-view (reagent/adapt-react-class (.-SafeAreaView ^js react-native)))
