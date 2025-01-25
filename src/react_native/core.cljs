@@ -44,6 +44,9 @@
 (def touchable-without-feedback
   (reagent/adapt-react-class (.-TouchableWithoutFeedback ^js react-native)))
 
+(def keyboard-avoiding-view
+  (reagent/adapt-react-class (.-KeyboardAvoidingView ^js react-native)))
+
 (def flat-list flat-list/flat-list)
 
 (defn hide-splash-screen
@@ -102,3 +105,5 @@
    (react/useEffect
     #(let [ret (handler)] (if (fn? ret) ret js/undefined))
     (get-js-deps deps))))
+
+(def platform (.-os (.-Platform ^js react-native)))

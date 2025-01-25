@@ -1,4 +1,4 @@
-(ns react-native.navigation.utils
+(ns react-native.utils
   (:require [reagent.core :as reagent]))
 
 (defn clj->json [data]

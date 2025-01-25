@@ -1,14 +1,13 @@
 (ns assistant.screens.home.view
   (:require
    ["react" :as react]
-   [goog.object :as gobj]
    [reagent.core :as r]
    [react-native.core :as rn]
+   [assistant.components.composer :as composer]
    [assistant.constants.images :as images]
-   [assistant.constants.messages :as messages]
-   ["./voice-wrapper" :as VoiceWrapper]))
+   [assistant.constants.messages :as messages]))
 
-(def recording (r/atom true))
+(def recording (r/atom false))
 (def loaded (r/atom false))
 (def onStarted (r/atom false))
 
@@ -110,12 +109,21 @@
 
 
 (defn- f-view []
+  (js/console.log rn/voice)
   (let [messages messages/messages]
     (rn/use-effect
      (fn []
-       (set! (.-onSpeechVolumeChanged rn/voice)
+       (set! (.-onSpeechResults rn/voice)
              (fn [event]
-               (js/console.log "Speech volume changed" event)))
+               (js/console.log "Speech results" event)))
+
+       (set! (.-onSpeechPartialResults rn/voice)
+             (fn [event]
+               (js/console.log "Speech partial results" event)))
+
+      ;;  (set! (.-onSpeechVolumeChanged rn/voice)
+      ;;        (fn [event]
+      ;;          (js/console.log "Speech volume changed" event)))
 
        (set! (.-onSpeechStart rn/voice)
              (fn [event]
@@ -132,6 +140,7 @@
        (set! (.-onSpeechRecognized rn/voice)
              (fn [event]
                (js/console.log "Speech recognized" event)))
+
        (fn []
          (->
           (.destroy ^js rn/voice)
@@ -146,7 +155,10 @@
        :show-vertical-scroll-indicator false
        :bounce  false}
       [render-messages messages]
-      [chat-actions]]]))
+      [rn/keyboard-avoiding-view
+       [rn/touchable-without-feedback
+        {:behaviour (if (= "ios" rn/platform) :padding :height)}
+        [composer/view]]]]]))
 
 (defn view []
   [:f> f-view])
