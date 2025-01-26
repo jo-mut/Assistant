@@ -3,6 +3,7 @@
    ["react" :as react]
    [reagent.core :as r]
    [react-native.core :as rn]
+   [assistant.api.api :as api]
    [assistant.components.composer :as composer]
    [assistant.constants.images :as images]
    [assistant.constants.messages :as messages]))
@@ -107,47 +108,13 @@
       :key-fn         (fn [] (str (rand-int 1000000)))]
      [rn/view])])
 
+(defn send-prompt []
+  (fn [input-message]
+    (js/console.log input-message)
+    (api/fetch input-message)))
 
 (defn- f-view []
-  (js/console.log rn/voice)
   (let [messages messages/messages]
-    (rn/use-effect
-     (fn []
-       (set! (.-onSpeechResults rn/voice)
-             (fn [event]
-               (js/console.log "Speech results" event)))
-
-       (set! (.-onSpeechPartialResults rn/voice)
-             (fn [event]
-               (js/console.log "Speech partial results" event)))
-
-      ;;  (set! (.-onSpeechVolumeChanged rn/voice)
-      ;;        (fn [event]
-      ;;          (js/console.log "Speech volume changed" event)))
-
-       (set! (.-onSpeechStart rn/voice)
-             (fn [event]
-               (js/console.log "Speech started" event)))
-
-       (set! (.-onSpeechEnd rn/voice)
-             (fn [event]
-               (js/console.log "Speech ended" event)))
-
-       (set! (.-onSpeechError rn/voice)
-             (fn [event]
-               (js/console.log "Speech error" event)))
-
-       (set! (.-onSpeechRecognized rn/voice)
-             (fn [event]
-               (js/console.log "Speech recognized" event)))
-
-       (fn []
-         (->
-          (.destroy ^js rn/voice)
-          (.then (fn []
-                   (.removeAllListeners rn/voice))))))
-     [@onStarted])
-
     [rn/view {:flex  1
               :style {:background-color "black"}}
      [rn/safe-area-view
@@ -157,8 +124,8 @@
       [render-messages messages]
       [rn/keyboard-avoiding-view
        [rn/touchable-without-feedback
-        {:behaviour (if (= "ios" rn/platform) :padding :height)}
-        [composer/view]]]]]))
+        [composer/view
+         {:on-press (send-prompt)}]]]]]))
 
 (defn view []
   [:f> f-view])
