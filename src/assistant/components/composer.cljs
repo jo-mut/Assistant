@@ -25,12 +25,13 @@
                       :color           "white"
                       :max-height       200
                       :min-height       50}}]
-     [rn/view {:background-color "white"
-               :border-radius    36/2
-               :height           36
-               :width            36
-               :margin-bottom    10
+     [rn/view {:background-color :#0077b5
+               :border-radius    24
+               :height           48
+               :width            48
+               :margin-bottom    8
                :margin-left      10
+               :padding          10
                :align-self       :flex-end
                :align-items      :center
                :justify-content  :center}
@@ -42,7 +43,7 @@
         {:source      (images/get-image :send)
          :resize-mode :contain
          :style       {:width       24
-                       :tint-color  "gray"
+                       :tint-color  "white"
                        :align-self :center
                        :height     36}}]]]]))
 

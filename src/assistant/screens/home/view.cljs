@@ -108,10 +108,9 @@
       :key-fn         (fn [] (str (rand-int 1000000)))]
      [rn/view])])
 
-(defn send-prompt []
-  (fn [input-message]
-    (js/console.log input-message)
-    (api/fetch input-message)))
+(defn send-prompt [messages]
+  (fn [prompt]
+    (api/fetch prompt messages)))
 
 (defn- f-view []
   (let [messages messages/messages]
@@ -125,7 +124,7 @@
       [rn/keyboard-avoiding-view
        [rn/touchable-without-feedback
         [composer/view
-         {:on-press (send-prompt)}]]]]]))
+         {:on-press (send-prompt "Do you know where is Mombasa?")}]]]]]))
 
 (defn view []
   [:f> f-view])
