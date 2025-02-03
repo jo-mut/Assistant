@@ -10,7 +10,7 @@
               :style {:justify-content   :space-between
                       :margin-horizontal 20}}
      [rn/text-input
-      {:value        input-message
+      {:value                  input-message
        :placeholder            "Enter your message"
        :placeholder-text-color "gray"
        :onChangeText (fn [value]

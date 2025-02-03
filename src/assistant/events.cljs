@@ -3,10 +3,10 @@
    [re-frame.core :as rf]
    [react-native.navigation.core :as navigation]))
 
-(def app-db (atom {}))
+(def app-db {:messages []})
 
 (rf/reg-event-fx
- {:events [:init-app-db]}
+ :init-app-db
  (fn []
    {:db app-db}))
 
@@ -31,3 +31,16 @@
  (fn [_]
    (let [route (.getCurrentRoute navigation/ref)]
      {:get-screen-params [route]})))
+
+(rf/reg-fx
+ :add-message
+ (fn [message]))
+
+(rf/reg-event-fx
+ :get-new-message
+ (fn [{:keys [db]} [_ message]]
+   (let [{:keys [role content]} message
+         new-message {:id      (js/Date.now)
+                      :role    role
+                      :content content}]
+     {:db (update db :messages conj new-message)})))

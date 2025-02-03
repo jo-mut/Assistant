@@ -1,10 +1,11 @@
 (ns assistant.core
   (:require
    [react-native.core :as rn]
+   [re-frame.core :as rf]
    [react-native.navigation.core :as navigation]
    [assistant.screens.core :as screens]
-   [assistant.screens.home.view :as home]
-   assistant.events))
+   assistant.events
+   assistant.subs))
 
 
 (defn app-root []
@@ -17,4 +18,5 @@
     screens/screens]])
 
 (defn init []
+  (rf/dispatch [:init-app-db])
   (rn/register-component "Assistant" app-root))
