@@ -7,8 +7,7 @@
    [assistant.api.api :as api]
    [assistant.components.composer :as composer]
    [assistant.constants.images :as images]
-   [promesa.core :as p]
-   [assistant.constants.messages :as messages]))
+   [promesa.core :as p]))
 
 (def recording (r/atom false))
 (def loaded (r/atom false))
@@ -81,62 +80,59 @@
     [record-button]
     [clear-chat]]])
 
-(defn render-messages []
-  (let [messages (clj->js @(rf/subscribe [:messages]))]
-    (js/console.log "messages retrieved: " messages))
-    [rn/view {:flex 1}
-     (if messages
-       [rn/flat-list
-        {:data                    messages
-         :content-container-style {:margin-bottom 100}
-         :render-fn               (fn [item]
-                                    (js/console.log "item " item)
-                                    [rn/view {:flex               1
-                                              :padding-horizontal 20
-                                              :margin-horizontal  20
-                                              :margin-top         5
-                                              :border-radius      15
-                                              :background-color   "gray"
-                                              :padding-vertical   10}
-                                     [rn/view {:flex-direction :row}
-                                      [rn/view {:height           30
-                                                :width            30
-                                                :border-radius    10
-                                                :margin-right     10
-                                                :background-color "red"}]
-                                      [rn/text {:style {:color     :white
-                                                        :flex      1
-                                                        :flex-wrap :wrap}}
-                                       (:content item)]]])}
-        :key-fn         (fn [] (str (:id item)))]
-       [rn/view
-        {:flex 1
-         :style {:justify-content :center
-                 :align-items     :center
-                 :padding         40}}
-        [rn/text
-         {:style {:color :gray
-                  :text-align :center}}
-         "Type in your message to start chatting with your assistant"]])])
+(defn render-messages [messages]
+  [rn/view {:flex 1}
+   (if messages
+     [rn/flat-list
+      {:data                    messages
+       :content-container-style {:margin-bottom 100}
+       :render-fn               (fn [item]
+                                  [rn/view {:flex               1
+                                            :margin-horizontal  20
+                                            :margin-top         5
+                                            :border-radius      15
+                                            :background-color   :#F2937
+                                            :padding-vertical   10}
+                                   [rn/view {:flex-direction :row}
+                                    [rn/view {:height           30
+                                              :width            30
+                                              :border-radius    10
+                                              :margin-right     10
+                                              :background-color "red"}]
+                                    [rn/text {:style {:color     :white
+                                                      :flex      1
+                                                      :flex-wrap :wrap}}
+                                     (:content item)]]])}
+      :key-fn         (fn [] (str (:id )))]
+     [rn/view
+      {:flex 1
+       :style {:justify-content :center
+               :align-items     :center
+               :padding         40}}
+      [rn/text
+       {:style {:color :gray
+                :text-align :center}}
+       "Type in your message to start chatting with your assistant"]])])
 
-(defn send-prompt [input-messages]
-  (fn []
-    (p/let [message (api/fetch input-messages)]
-      (when (not (nil? message))
-        (rf/dispatch [:get-new-message message])))))
+
 
 (defn- f-view []
-  [rn/view {:flex  1
-            :style {:background-color "black"}}
-   [rn/safe-area-view
-    {:flex    1
-     :show-vertical-scroll-indicator false
-     :bounce  false}
-    [render-messages]
-    [rn/keyboard-avoiding-view
-     [rn/touchable-without-feedback
-      [composer/view
-       {:on-press (send-prompt "Do you know where is Mombasa?")}]]]]])
+  (let [messages @(rf/subscribe [:messages])]
+    [rn/view {:flex  1
+              :style {:background-color "black"}}
+     [rn/safe-area-view
+      {:flex    1
+       :show-vertical-scroll-indicator false
+       :bounce  false}
+      [render-messages messages]
+      [rn/keyboard-avoiding-view
+       [rn/touchable-without-feedback
+        [composer/view
+         {:on-press (fn [input-message]
+                      (rf/dispatch [:save-message input-message])
+                      (p/let [message (api/fetch input-message)]
+                        (when (not (nil? message))
+                          (rf/dispatch [:save-message message]))))}]]]]]))
 
 (defn view []
   [:f> f-view])

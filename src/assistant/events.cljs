@@ -37,9 +37,11 @@
  (fn [message]))
 
 (rf/reg-event-fx
- :get-new-message
+ :save-message
  (fn [{:keys [db]} [_ message]]
-   (let [{:keys [role content]} message
+   (let [{:keys [role content]
+          :or {role    "user"
+               content message}} message
          new-message {:id      (js/Date.now)
                       :role    role
                       :content content}]

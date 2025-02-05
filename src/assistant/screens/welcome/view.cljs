@@ -1,6 +1,7 @@
 (ns assistant.screens.welcome.view
   (:require
    [react-native.core :as rn]
+   [assistant.constants.custom-strings :as s]
    [re-frame.core :as rf]))
 
 (defn view []
@@ -15,11 +16,11 @@
                {:color        :white
                 :font-size    30
                 :font-weight  :bold}}
-      "Kallu"]
+      (:app-title s/strings)]
      [rn/text {:style
                {:color        :white
                 :margin-top   10}}
-      "Welcome to the future of chat"]]
+      (:welcome-title s/strings)]]
     [rn/view {:flex  1
               :style {:margin-vertical   100
                       :margin-horizontal 20
@@ -39,4 +40,4 @@
                  :font-size    18
                  :font-weight  :bold
                  :padding      20}}
-       "Get Started"]]]]])
+       (:get-started s/strings)]]]]])

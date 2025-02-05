@@ -15,5 +15,4 @@
                  :output-dir "build/app"
                  :compiler-options {:closure-defines
                                     {"re_frame.trace.trace_enabled_QMARK_" true}}
-                 :devtools   {:preloads     [re-frisk-remote.preload]
-                              :autoload     true}}}}
+                 :devtools   {:autoload     false}}}}

@@ -1,31 +1,20 @@
 (ns assistant.api.api
-  (:require [promesa.core :as p]))
+  (:require 
+   ["dotenv" :as dotenv]
+   [promesa.core :as p]))
+
+(.config dotenv)
+
+(def OPEN_AI_API_KEY (.-OPEN_AI_API_KEY js/process.env))
 
 (def base-url "https://api.openai.com/v1/chat/completions")
 (def ollama-url "http://localhost:11434/api/chat/")
-(def api-key "")
+(def api-key OPEN_AI_API_KEY)
 
 (defn options [data]
   #js {:method  "POST"
        :headers #js {"Content-Type" "application/json"}
        :body    (js/JSON.stringify (clj->js data))})
-
-;; (defn fetch [prompt input-message]
-;;   (let [object {:model "llama3"
-;;                 :messages [{:role "user"
-;;                             :content input-message}]
-;;                 :stream false}]
-;;     (-> (js/fetch ollama-url (options  object))
-;;         (.then (fn [response]
-;;                  (js/console.log "input data: ", response)
-;;                  (if (.-ok response)
-;;                    (.json response)
-;;                    (throw (js/Error "Failed to fetch data")))))
-;;         (.then (fn [data]
-;;                  (js/console.log data)))
-;;         (.catch (fn [error]
-;;                   (js/console.log "Error fetching api data" error))))))
-
 
 (defn fetch [input-message]
   (->

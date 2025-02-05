@@ -1,5 +1,6 @@
 (ns assistant.components.features
   (:require
+   [assistant.constants.custom-strings :as s]
    [react-native.core :as rn]))
 
 
@@ -15,7 +16,7 @@
              {:color         "white"
               :margin-top    10
               :margin-bottom 20}}
-    "Chat GPT can help you with instant and knowledgeable responses, assist you  with creative ideas on a wide range of topics"]])
+    (:chat-gpt-title s/strings)]])
 
 (defn dall-e []
   [rn/view {:style {:background-color :#0077b5
@@ -30,7 +31,7 @@
              {:color         "white"
               :margin-top    10
               :margin-bottom 20}}
-    "DALL-E can generate images from textual descriptions,create images from scratch, and colorize black and white images"]])
+    (:dalle-title s/strings)]])
 
 (defn smart-ai []
   [rn/view {:style {:background-color :#0077b5
@@ -45,7 +46,7 @@
              {:color         "white"
               :margin-top    10
               :margin-bottom 20}}
-    "A powerful voice ai that can help you with your daily tasks, answer your questions, and provide you with information"]])
+    (:voice-title s/strings)]])
 
 (defn view []
   [rn/view {:flex  1
@@ -66,7 +67,7 @@
                  :margin-bottom 10
                  :margin-top    50
                  :font-weight   "semibold"}}
-       "Features"]
+       (:features s/strings)]
       [chat-gpt]
       [dall-e]
       [smart-ai]]]]])

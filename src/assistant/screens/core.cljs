@@ -5,6 +5,6 @@
 
 (def screens
   [{:name "Home"
-    :component home/view}
+    :component home/view} 
    {:name "Welcome"
     :component welcome/view}])
