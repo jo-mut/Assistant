@@ -21,6 +21,7 @@
                {:color        :white
                 :margin-top   10}}
       (:welcome-title s/strings)]]
+    
     [rn/view {:flex  1
               :style {:margin-vertical   100
                       :margin-horizontal 20
@@ -28,6 +29,7 @@
                       :align-items       :center
                       :justify-content   :center
                       :background-color  :#0077b5}}]
+    
     [rn/touchable-opacity
      {:onPress #(rf/dispatch [:navigate-to "Home" {}])}
      [rn/view {:border-radius     20

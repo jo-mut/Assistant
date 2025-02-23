@@ -5,8 +5,10 @@
    [re-frame.core :as rf]
    [react-native.core :as rn]
    [assistant.api.api :as api]
+   [assistant.components.page-nav :as page-nav]
    [assistant.components.composer :as composer]
    [assistant.constants.images :as images]
+   [assistant.constants.custom-strings :as s]
    [promesa.core :as p]))
 
 (def recording (r/atom false))
@@ -23,7 +25,7 @@
                     :border-radius    10}}
    [rn/text {:style {:color     :black
                      :font-size 9}}
-    "Clear"]])
+    (:clear s/strings)]])
 
 
 (defn recording-status []
@@ -96,14 +98,22 @@
                                    [rn/view {:flex-direction :row}
                                     [rn/view {:height           30
                                               :width            30
-                                              :border-radius    10
+                                              :border-radius    30
                                               :margin-right     10
-                                              :background-color "red"}]
-                                    [rn/text {:style {:color     :white
-                                                      :flex      1
-                                                      :flex-wrap :wrap}}
-                                     (:content item)]]])}
-      :key-fn         (fn [] (str (:id )))]
+                                              :background-color (if (= (:role item) "assistant")
+                                                                  :#0077b5
+                                                                  :#F97316)}]
+                                    [rn/view
+                                     [rn/text {:style {:color       :white
+                                                       :flex        1
+                                                       :flex-wrap   :wrap
+                                                       :font-weight "600"}}
+                                      (:role item)]
+                                     [rn/text {:style {:color     :white
+                                                       :flex      1
+                                                       :flex-wrap :wrap}}
+                                      (:content item)]]]])}
+      :key-fn         (fn [] (str (:id rand-int)))]
      [rn/view
       {:flex 1
        :style {:justify-content :center
@@ -124,6 +134,9 @@
       {:flex    1
        :show-vertical-scroll-indicator false
        :bounce  false}
+      [page-nav/view
+       {:left {:icon (images/get-image :left-arrow)}
+        :center {:title "Chat"}}]
       [render-messages messages]
       [rn/keyboard-avoiding-view
        [rn/touchable-without-feedback

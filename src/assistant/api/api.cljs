@@ -1,9 +1,9 @@
 (ns assistant.api.api
   (:require 
-   ["dotenv" :as dotenv]
+  ;;  ["dotenv" :as dotenv]
    [promesa.core :as p]))
 
-(.config dotenv)
+;; (.config dotenv)
 
 (def OPEN_AI_API_KEY (.-OPEN_AI_API_KEY js/process.env))
 

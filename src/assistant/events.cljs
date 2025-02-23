@@ -32,10 +32,6 @@
    (let [route (.getCurrentRoute navigation/ref)]
      {:get-screen-params [route]})))
 
-(rf/reg-fx
- :add-message
- (fn [message]))
-
 (rf/reg-event-fx
  :save-message
  (fn [{:keys [db]} [_ message]]

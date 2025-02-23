@@ -8,7 +8,8 @@
    :like               (js/require "../../assets/images/like.png")
    :dislike            (js/require "../../assets/images/dislike.png")
    :rotate             (js/require "../../assets/images/rotate.png")
-   :robot              (js/require "../../assets/images/robot.png")})
+   :robot              (js/require "../../assets/images/robot.png")
+   :left-arrow         (js/require "../../assets/images/left-arrow.png")})
 
 
 (defn get-image

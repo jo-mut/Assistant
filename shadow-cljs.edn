@@ -9,10 +9,10 @@
   [clj-http "2.3.0"]
   [funcool/promesa "11.0.678"]]
 
- :builds       {:app
-                {:target     :react-native
-                 :init-fn    assistant.core/init
-                 :output-dir "build/app"
-                 :compiler-options {:closure-defines
-                                    {"re_frame.trace.trace_enabled_QMARK_" true}}
-                 :devtools   {:autoload     false}}}}
+ :builds {:app
+          {:target     :react-native
+           :init-fn    assistant.core/init
+           :output-dir "build/app"
+           :compiler-options {:closure-defines
+                              {"re_frame.trace.trace_enabled_QMARK_" true}}
+           :devtools   {:autoload     false}}}}
